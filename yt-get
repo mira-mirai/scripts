@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 # this script helps download youtube videos and playlists with my preferred options.
 
