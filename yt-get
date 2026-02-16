@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -ex
+
+if [[ -z "$1" ]]; then
+  echo "Usage:"
+  echo "  yt-get.sh [--list-only] PLAYLIST_ID"
+  echo "  yt-get.sh VIDEO_ID"
+  exit 1
+fi
+
+# Check for optional --list-only flag
+LIST_ONLY=0
+if [[ "$1" == "--list-only" ]]; then
+  LIST_ONLY=1
+  shift
+fi
+
+ID="$1"
+
+COMMON_OPTS=(
+  --write-subs
+  --write-auto-subs
+  --sub-langs "en,ja"
+  --sub-format srt
+  --embed-metadata
+  -f "bv*+ba/b"
+  --merge-output-format mkv
+  --write-thumbnail
+  --convert-thumbnails jpg
+  --download-archive downloaded.txt
+  --cookies-from-browser firefox
+  --write-info-json
+)
+
+# Heuristic:
+# Playlist IDs usually start with PL, OL, UU, FL, RD, etc.
+# Video IDs are 11 chars long.
+if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
+  PLAYLIST_NAME=$(yt-dlp --flat-playlist --print "%(playlist_title)s" $ID)
+  echo "name is $PLAYLIST_NAME"
+  echo "▶ Detected playlist: $ID, name: $PLAYLIST_NAME"
+
+  # Create a text file with video title, ID, and URL
+  TXT_FILE="playlist_${ID}_videos.txt"
+  echo "Generating video list: $TXT_FILE"
+  yt-dlp -i --flat-playlist --print "%(title)s|%(id)s|%(webpage_url)s" $ID > $TXT_FILE
+
+  echo "▶ Video list saved to $TXT_FILE"
+  if [[ $LIST_ONLY -eq 0 ]]; then
+	  yt-dlp \
+		-o "%(playlist_title)s/%(playlist_index)02d - %(title)s/%(title)s.%(ext)s" \
+		"${COMMON_OPTS[@]}" \
+		"https://www.youtube.com/playlist?list=$ID"
+  else
+    echo "▶ List-only mode enabled. Skipping video downloads."
+  fi	
+
+elif [[ ${#ID} -eq 11 ]]; then
+  echo "▶ Detected single video: $ID"
+
+  yt-dlp \
+    -o "%(title)s/%(title)s.%(ext)s" \
+    "${COMMON_OPTS[@]}" \
+    "https://www.youtube.com/watch?v=$ID"
+
+else
+  echo "❌ Could not determine whether this is a playlist or video ID."
+  echo "ID provided: $ID"
+  exit 1
+fi
+
