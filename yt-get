@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -ex
 
+# this script helps download youtube videos and playlists with my preferred options.
+
 if [[ -z "$1" ]]; then
   echo "Usage:"
   echo "  yt-get.sh [--list-only] PLAYLIST_ID"
