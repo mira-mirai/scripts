@@ -44,6 +44,7 @@ if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
   echo "▶ Detected playlist: $ID, name: $PLAYLIST_NAME"
 
   mkdir -p "$PLAYLIST_NAME"
+  ARCHIVE_FILE="$PLAYLIST_NAME/downloaded.txt"
 
   # Create a text file with video title, ID, and URL
   TXT_FILE="${PLAYLIST_NAME}/playlist_${ID}_videos.txt"
@@ -55,6 +56,7 @@ if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
 	  yt-dlp \
 		-o "%(playlist_title)s/%(playlist_index)02d - %(title)s/%(title)s.%(ext)s" \
 		"${COMMON_OPTS[@]}" \
+		--download-archive "$ARCHIVE_FILE" \
 		"https://www.youtube.com/playlist?list=$ID"
   else
     echo "▶ List-only mode enabled. Skipping video downloads."
