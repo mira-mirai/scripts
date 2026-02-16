@@ -39,8 +39,9 @@ COMMON_OPTS=(
 # Playlist IDs usually start with PL, OL, UU, FL, RD, etc.
 # Video IDs are 11 chars long.
 if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
-  PLAYLIST_NAME=$(yt-dlp --flat-playlist --print "%(playlist_title)s" $ID)
-  echo "name is $PLAYLIST_NAME"
+  #PLAYLIST_NAME=$(yt-dlp --flat-playlist --print "%(playlist_title)s" $ID)
+  PLAYLIST_NAME=$(yt-dlp --flat-playlist --playlist-items 1 --print "%(playlist_title)s" "$ID")
+
   echo "▶ Detected playlist: $ID, name: $PLAYLIST_NAME"
 
   # Create a text file with video title, ID, and URL
