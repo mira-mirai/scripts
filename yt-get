@@ -20,18 +20,19 @@ fi
 ID="$1"
 
 COMMON_OPTS=(
-  --write-subs
-  --write-auto-subs
-  --sub-langs "en,ja"
-  --sub-format srt
-  --embed-metadata
-  -f "bv*+ba/b"
-  --merge-output-format mkv
-  --write-thumbnail
-  --convert-thumbnails jpg
-  --download-archive downloaded.txt
-  --cookies-from-browser firefox
-  --write-info-json
+  --sub-langs "en,ja"				# download subs in english and japanese
+  --write-subs						# download existing subtitles
+  --write-auto-subs					# download automatically generated subtitles
+  --sub-format srt					# use srt format for subtitles
+  --embed-metadata					# embeds metadata and thumbnail into the downloaded file
+  -f "bv*+ba/b"						# download best video and best audio and merge, grab best single file as fall back
+  --merge-output-format mkv			# ensure merge to mkv 
+  --write-thumbnail					# save the thumbnail to a file 
+  --convert-thumbnails jpg			# convert it to png if another format 
+  --embed-thumbnail					# embed the thumbnail in the file as well 
+  --download-archive downloaded.txt # save a an archive file showing what was downloaded 
+  --cookies-from-browser firefox	# use firefox cookies 
+  --write-info-json					# save all metadata
 )
 
 # Heuristic:
