@@ -30,7 +30,6 @@ COMMON_OPTS=(
   --write-thumbnail					# save the thumbnail to a file 
   --convert-thumbnails jpg			# convert it to png if another format 
   --embed-thumbnail					# embed the thumbnail in the file as well 
-  --download-archive downloaded.txt # save a an archive file showing what was downloaded 
   --cookies-from-browser firefox	# use firefox cookies 
   --write-info-json					# save all metadata
 )
@@ -44,8 +43,10 @@ if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
 
   echo "▶ Detected playlist: $ID, name: $PLAYLIST_NAME"
 
+  mkdir -p "$PLAYLIST_NAME"
+
   # Create a text file with video title, ID, and URL
-  TXT_FILE="playlist_${ID}_videos.txt"
+  TXT_FILE="${PLAYLIST_NAME}/playlist_${ID}_videos.txt"
   echo "Generating video list: $TXT_FILE"
   yt-dlp -i --flat-playlist --print "%(title)s|%(id)s|%(webpage_url)s" $ID > $TXT_FILE
 
