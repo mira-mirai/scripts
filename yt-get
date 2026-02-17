@@ -25,7 +25,6 @@ COMMON_OPTS=(
   --write-auto-subs					# download automatically generated subtitles
   --sub-format srt					# use srt format for subtitles
   --embed-metadata					# embeds metadata and thumbnail into the downloaded file
-  #-f "bv*+ba/b"						# download best video and best audio and merge, grab best single file as fall back
   -f "bv*+ba/b,ba[ext=m4a]/ba"
   --merge-output-format mkv			# ensure merge to mkv 
   --write-thumbnail					# save the thumbnail to a file 
@@ -40,7 +39,6 @@ COMMON_OPTS=(
 # Video IDs are 11 chars long.
 if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
   PLAYLIST_NAME=$(yt-dlp --flat-playlist --playlist-items 1 --print "%(playlist_title)s" "$ID")
-
   echo "▶ Detected playlist: $ID, name: $PLAYLIST_NAME"
 
   mkdir -p "$PLAYLIST_NAME"
@@ -52,13 +50,24 @@ if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
   yt-dlp -i --flat-playlist --print "%(title)s|%(id)s|%(webpage_url)s" $ID > $TXT_FILE
 
   echo "▶ Video list saved to $TXT_FILE"
+
   if [[ $LIST_ONLY -eq 0 ]]; then
-	  yt-dlp \
+	echo "▶ Begin playlist video download"
+	yt-dlp \
 		-o "%(playlist_title)s/%(playlist_index)02d - %(title)s/%(title)s.%(ext)s" \
 		"${COMMON_OPTS[@]}" \
 		--download-archive "$ARCHIVE_FILE" \
 		"https://www.youtube.com/playlist?list=$ID"
-
+	
+	# get this working later
+	# Collect audio files into a separate playlist-level audio folder
+	#AUDIO_DIR="$PLAYLIST_NAME/audio"
+	#echo "▶ Creating directory for audio files at $AUDIO_DIR"
+	#mkdir -p "$AUDIO_DIR"
+	#echo "▶ Copying audio files copied to $AUDIO_DIR"
+	## Find all audio files (m4a, mp3, etc.) in the playlist folder and copy them
+  	#find "$PLAYLIST_NAME" -type f \( -iname "*.m4a" -o -iname "*.mp3" \) -exec cp {} "$AUDIO_DIR" \;
+	#echo "▶ All audio files copied to $AUDIO_DIR"
   else
     echo "▶ List-only mode enabled. Skipping video downloads."
   fi	
