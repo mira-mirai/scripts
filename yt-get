@@ -25,7 +25,8 @@ COMMON_OPTS=(
   --write-auto-subs					# download automatically generated subtitles
   --sub-format srt					# use srt format for subtitles
   --embed-metadata					# embeds metadata and thumbnail into the downloaded file
-  -f "bv*+ba/b"						# download best video and best audio and merge, grab best single file as fall back
+  #-f "bv*+ba/b"						# download best video and best audio and merge, grab best single file as fall back
+  -f "bv*+ba/b,ba[ext=m4a]/ba"
   --merge-output-format mkv			# ensure merge to mkv 
   --write-thumbnail					# save the thumbnail to a file 
   --convert-thumbnails jpg			# convert it to png if another format 
@@ -57,6 +58,7 @@ if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
 		"${COMMON_OPTS[@]}" \
 		--download-archive "$ARCHIVE_FILE" \
 		"https://www.youtube.com/playlist?list=$ID"
+
   else
     echo "▶ List-only mode enabled. Skipping video downloads."
   fi	
