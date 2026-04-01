@@ -47,7 +47,7 @@ if [[ "$ID" =~ ^(PL|OL|UU|FL|RD) ]]; then
   # Create a text file with video title, ID, and URL
   TXT_FILE="${PLAYLIST_NAME}/playlist_${ID}_videos.txt"
   echo "Generating video list: $TXT_FILE"
-  yt-dlp -i --flat-playlist --print "%(title)s|%(id)s|%(webpage_url)s" $ID > $TXT_FILE
+  yt-dlp -i --flat-playlist --print "%(title)s|%(id)s|%(webpage_url)s" $ID > "$TXT_FILE"
 
   echo "▶ Video list saved to $TXT_FILE"
 
